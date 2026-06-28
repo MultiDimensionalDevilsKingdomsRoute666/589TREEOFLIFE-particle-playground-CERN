@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Particle Playground — Explore CERN Open Data</title>
+  <meta name="description" content="An interactive particle physics simulator powered by real CERN open collision data. Explore the subatomic world through beautiful, accurate visualizations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="src/styles/main.css" />
+  <link rel="stylesheet" href="src/styles/collider.css" />
+  <link rel="stylesheet" href="src/styles/zoo.css" />
+  <link rel="stylesheet" href="src/styles/events.css" />
+  <link rel="stylesheet" href="src/styles/learn.css" />
+  <link rel="stylesheet" href="src/styles/tour.css" />
+  <link rel="stylesheet" href="src/styles/histogram.css" />
+  <link rel="stylesheet" href="src/styles/feynman.css" />
+</head>
+<body>
+
+  <!-- ─── NAV ─────────────────────────────────────────────────────────── -->
+  <nav class="nav" id="nav">
+    <div class="nav__logo">
+      <span class="nav__logo-symbol">⬡</span>
+      <span class="nav__logo-text">Particle<em>Playground</em></span>
+    </div>
+    <ul class="nav__links">
+      <li><a href="#collider" class="nav__link active" data-section="collider">Collider</a></li>
+      <li><a href="#zoo" class="nav__link" data-section="zoo">Particle Zoo</a></li>
+      <li><a href="#events" class="nav__link" data-section="events">Real Events</a></li>
+      <li><a href="#histogram" class="nav__link" data-section="histogram">Mass Spectrum</a></li>
+      <li><a href="#learn-section" class="nav__link" data-section="learn-section">Learn</a></li>
+    </ul>
+    <a href="https://opendata.cern.ch" target="_blank" rel="noopener" class="nav__cta">
+      CERN Open Data ↗
+    </a>
+    <button class="nav__burger" id="navBurger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ─── HERO ─────────────────────────────────────────────────────────── -->
+  <header class="hero" id="hero">
+    <canvas class="hero__canvas" id="heroCanvas"></canvas>
+    <div class="hero__content">
+      <div class="hero__badge">Powered by CERN Open Data · CC0 License</div>
+      <h1 class="hero__title">
+        <span class="hero__title-line">Collide.</span>
+        <span class="hero__title-line">Discover.</span>
+        <span class="hero__title-line hero__title-line--accent">Understand.</span>
+      </h1>
+      <p class="hero__sub">
+        Real proton–proton collision data from the Large Hadron Collider, transformed into
+        an interactive physics laboratory anyone can explore.
+      </p>
+      <div class="hero__actions">
+        <a href="#collider" class="btn btn--primary">Launch Collider</a>
+        <a href="#events" class="btn btn--ghost">Browse Real Events</a>
+      </div>
+      <div class="hero__stats" id="heroStats">
+        <div class="hero__stat">
+          <span class="hero__stat-value" data-count="13600">0</span>
+          <span class="hero__stat-unit">GeV</span>
+          <span class="hero__stat-label">Max LHC Energy</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-value" data-count="1200">0</span>
+          <span class="hero__stat-unit">M+</span>
+          <span class="hero__stat-label">Collisions / Second</span>
+        </div>
+        <div class="hero__stat">
+          <span class="hero__stat-value" data-count="17">0</span>
+          <span class="hero__stat-unit"></span>
+          <span class="hero__stat-label">Known Fundamental Particles</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero__scroll-indicator">
+      <span>Scroll to explore</span>
+      <div class="hero__scroll-line"></div>
+    </div>
+  </header>
+
+  <!-- ─── COLLIDER SECTION ─────────────────────────────────────────────── -->
+  <section class="section" id="collider">
+    <div class="section__header">
+      <span class="section__tag">01 — Interactive Experiment</span>
+      <h2 class="section__title">The Collider</h2>
+      <p class="section__desc">
+        Configure your beam parameters and fire. The physics engine calculates
+        decay products using conservation laws and cross-section data from real LHC runs.
+      </p>
+    </div>
+
+    <div class="collider-lab">
+      <!-- Controls Panel -->
+      <aside class="collider-controls">
+        <div class="control-group">
+          <label class="control-label">Beam Type</label>
+          <div class="beam-selector" id="beamSelector">
+            <button class="beam-btn active" data-beam="pp">p — p</button>
+            <button class="beam-btn" data-beam="pPb">p — Pb</button>
+            <button class="beam-btn" data-beam="PbPb">Pb — Pb</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            Centre-of-Mass Energy
+            <span class="control-value" id="energyDisplay">7.00 TeV</span>
+          </label>
+          <div class="slider-track">
+            <input type="range" class="slider" id="energySlider"
+              min="900" max="13600" step="100" value="7000" />
+            <div class="slider-fill" id="energyFill"></div>
+          </div>
+          <div class="slider-labels">
+            <span>900 GeV</span><span>13.6 TeV</span>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">
+            Luminosity
+            <span class="control-value" id="lumiDisplay">10³⁴</span>
+          </label>
+          <div class="slider-track">
+            <input type="range" class="slider" id="lumiSlider"
+              min="1" max="5" step="1" value="3" />
+            <div class="slider-fill" id="lumiFill"></div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="control-label">Focus Channel</label>
+          <select class="select" id="focusChannel">
+            <option value="all">All Particles</option>
+            <option value="bosons">Gauge Bosons (W, Z, γ)</option>
+            <option value="higgs">Higgs Boson (H)</option>
+            <option value="top">Top Quark Pair (tt̄)</option>
+            <option value="jets">QCD Jets</option>
+          </select>
+        </div>
+
+        <button class="collide-btn" id="collideBtn">
+          <span class="collide-btn__label">COLLIDE</span>
+          <span class="collide-btn__energy" id="collideBtnEnergy">7 TeV</span>
+        </button>
+
+        <div class="prediction-panel" id="predictionPanel">
+          <div class="prediction-panel__header">
+            <span class="prediction-panel__title">Physics Prediction</span>
+            <span class="prediction-panel__badge">Based on PDG Cross-Sections</span>
+          </div>
+          <div class="prediction-list" id="predictionList">
+            <!-- Filled by JS -->
+          </div>
+        </div>
+      </aside>
+
+      <!-- Canvas Area -->
+      <div class="collider-stage">
+        <canvas class="collider-canvas" id="colliderCanvas"></canvas>
+        <div class="collider-overlay" id="colliderOverlay">
+          <div class="collider-overlay__icon">⬡</div>
+          <p class="collider-overlay__text">Configure beam parameters<br/>and press <strong>COLLIDE</strong></p>
+        </div>
+        <div class="collider-result" id="colliderResult" hidden>
+          <!-- Filled by JS -->
+        </div>
+        <div class="collider-hud">
+          <div class="hud-item">
+            <span class="hud-label">√s</span>
+            <span class="hud-value" id="hudEnergy">—</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">Events</span>
+            <span class="hud-value" id="hudEvents">0</span>
+          </div>
+          <div class="hud-item">
+            <span class="hud-label">Particles</span>
+            <span class="hud-value" id="hudParticles">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Particle Detail Panel -->
+      <aside class="particle-detail" id="particleDetail">
+        <div class="particle-detail__empty">
+          <div class="particle-detail__empty-icon">🔭</div>
+          <p>Click on a particle track to inspect it</p>
+        </div>
+        <div class="particle-detail__content" id="particleDetailContent" hidden>
+          <!-- Filled by JS -->
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ─── PARTICLE ZOO ──────────────────────────────────────────────────── -->
+  <section class="section section--dark" id="zoo">
+    <div class="section__header">
+      <span class="section__tag">02 — Standard Model</span>
+      <h2 class="section__title">Particle Zoo</h2>
+      <p class="section__desc">
+        Every fundamental particle known to physics, with real properties from the
+        Particle Data Group. Click any particle to explore its story.
+      </p>
+    </div>
+
+    <div class="zoo-filters" id="zooFilters">
+      <button class="zoo-filter active" data-filter="all">All</button>
+      <button class="zoo-filter" data-filter="quarks">Quarks</button>
+      <button class="zoo-filter" data-filter="leptons">Leptons</button>
+      <button class="zoo-filter" data-filter="bosons">Bosons</button>
+    </div>
+
+    <div class="zoo-grid" id="zooGrid">
+      <!-- Filled by JS -->
+    </div>
+
+    <!-- Particle Modal -->
+    <div class="particle-modal" id="particleModal" hidden>
+      <div class="particle-modal__backdrop" id="modalBackdrop"></div>
+      <div class="particle-modal__card" id="modalCard">
+        <!-- Filled by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── REAL EVENTS ───────────────────────────────────────────────────── -->
+  <section class="section" id="events">
+    <div class="section__header">
+      <span class="section__tag">03 — CERN Open Data</span>
+      <h2 class="section__title">Real Collision Events</h2>
+      <p class="section__desc">
+        Actual recorded collisions from the CMS detector at the LHC.
+        Each event is a snapshot of the subatomic world, frozen in time.
+      </p>
+    </div>
+
+    <div class="events-layout">
+      <div class="events-display">
+        <canvas class="events-canvas" id="eventsCanvas"></canvas>
+        <div class="events-legend">
+          <div class="legend-item"><span class="legend-dot" style="background:#00e5ff"></span>Electron / Positron</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ff4081"></span>Muon</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#69ff47"></span>Jet (Hadron)</div>
+          <div class="legend-item"><span class="legend-dot" style="background:#ffd740"></span>Photon</div>
+          <div class="legend-item"><span class="legend-dot" style="background:rgba(255,255,255,0.3)"></span>Missing E<sub>T</sub></div>
+        </div>
+      </div>
+
+      <div class="events-list">
+        <div class="events-list__header">
+          <span>Select an event to display</span>
+          <button class="btn btn--ghost btn--sm" id="shuffleEvents">Shuffle ↺</button>
+        </div>
+        <div class="events-cards" id="eventsCards">
+          <!-- Filled by JS -->
+        </div>
+        <div class="events-source">
+          <span>Data: </span>
+          <a href="https://opendata.cern.ch/record/545" target="_blank" rel="noopener">
+            CMS Run2010B · DOI 10.7483/OPENDATA.CMS.A342.9982
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ─── INVARIANT MASS HISTOGRAM ──────────────────────────────────── -->
+  <section class="histogram-section" id="histogram">
+    <div class="section__header">
+      <span class="section__tag">04 — Particle Discovery</span>
+      <h2 class="section__title">Discover Particles Yourself</h2>
+      <p class="section__desc">
+        Every time you collide, the masses of produced particle pairs are recorded here.
+        Keep colliding — a peak will emerge at <strong>91 GeV</strong>, revealing the Z boson.
+        This is exactly how CERN scientists discovered particles: by accumulating thousands of events
+        and watching signals appear above the background.
+      </p>
+    </div>
+    <div class="histogram-layout">
+      <div class="histogram-chart">
+        <div class="histogram-toolbar">
+          <span class="histogram-toolbar__title">Invariant Mass Spectrum</span>
+          <div class="histogram-mode-btns">
+            <button class="histogram-mode-btn active" data-mode="count">Linear</button>
+            <button class="histogram-mode-btn" data-mode="log">Log</button>
+          </div>
+          <button class="histogram-clear-btn" id="histogramClearBtn">Clear x</button>
+        </div>
+        <div class="histogram-canvas-wrap">
+          <canvas id="histogramCanvas"></canvas>
+          <div class="histogram-empty" id="histogramEmpty" style="display:flex">
+            <div class="histogram-empty__icon">📊</div>
+            <div class="histogram-empty__text">No data yet.<br/>Go to the Collider and press <strong>COLLIDE</strong>.</div>
+            <div class="histogram-empty__hint">Each collision adds entries to this histogram.</div>
+          </div>
+          <div class="histogram-peak-badge" id="histogramPeakBadge">
+            <span class="histogram-peak-badge__label">Peak Detected</span>
+            <span class="histogram-peak-badge__val" id="histogramPeakVal">—</span>
+            <span class="histogram-peak-badge__sub" id="histogramPeakSub"></span>
+          </div>
+        </div>
+      </div>
+      <div class="histogram-panel">
+        <div class="histogram-panel__section">
+          <div class="histogram-panel__label">Channel</div>
+          <div class="histogram-channels">
+            <div class="histogram-channel active" data-channel="dimuon"><span class="histogram-channel__dot" style="background:#ff4081"></span><span class="histogram-channel__name">Dimuon (mu+mu-)</span><span class="histogram-channel__count">0</span></div>
+            <div class="histogram-channel" data-channel="dielectron"><span class="histogram-channel__dot" style="background:#00e5ff"></span><span class="histogram-channel__name">Dielectron (e+e-)</span><span class="histogram-channel__count">0</span></div>
+            <div class="histogram-channel" data-channel="diphoton"><span class="histogram-channel__dot" style="background:#ffd740"></span><span class="histogram-channel__name">Diphoton (yy)</span><span class="histogram-channel__count">0</span></div>
+            <div class="histogram-channel" data-channel="all"><span class="histogram-channel__dot" style="background:#69ff47"></span><span class="histogram-channel__name">All Particles</span><span class="histogram-channel__count">0</span></div>
+          </div>
+        </div>
+        <div class="histogram-panel__section">
+          <div class="histogram-panel__label">Statistics</div>
+          <div class="histogram-stats">
+            <div class="histogram-stat"><span class="histogram-stat__val" id="histStatEvents">0</span><span class="histogram-stat__key">Total Collisions</span></div>
+            <div class="histogram-stat"><span class="histogram-stat__val" id="histStatEntries">0</span><span class="histogram-stat__key">Channel Entries</span></div>
+            <div class="histogram-stat"><span class="histogram-stat__val" id="histStatPeak">—</span><span class="histogram-stat__key">Peak Position</span></div>
+            <div class="histogram-stat"><span class="histogram-stat__val">91.2</span><span class="histogram-stat__key">Expected (GeV)</span></div>
+          </div>
+        </div>
+        <div class="histogram-panel__section">
+          <div class="histogram-panel__label">What to Look For</div>
+          <p class="histogram-explain">Select the <strong>Dimuon channel</strong> and keep pressing COLLIDE at <strong>7 TeV or higher</strong>. After 20-30 collisions, a peak appears near <strong>91 GeV</strong> — the Z boson mass.<br/><br/>This bump is called a <strong>resonance</strong>. CERN found the Higgs boson exactly this way in 2012 — by spotting a tiny bump at <em>125 GeV</em>.</p>
+        </div>
+        <div class="histogram-panel__section">
+          <div class="discovery-card" id="histDiscovery">
+            <div class="discovery-card__icon">🎉</div>
+            <div class="discovery-card__title">Z Boson Detected!</div>
+            <p class="discovery-card__text">You have accumulated enough dimuon events to see the <em>Z boson resonance</em> at 91 GeV. Congratulations — you just discovered the Z boson the same way CERN scientists do it.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── WHAT YOU LEARN ──────────────────────────────────────────────── -->
+  <section class="section section--dark" id="learn-section">
+    <div class="section__header">
+      <span class="section__tag">05 — Knowledge</span>
+      <h2 class="section__title">What You Can Learn Here</h2>
+      <p class="section__desc">
+        Particle Playground is designed to teach the same concepts, methods, and data analysis techniques
+        used by physicists at CERN — structured for curious minds without prior physics training.
+      </p>
+    </div>
+
+    <div class="learn-topics">
+
+      <div class="learn-topic">
+        <div class="learn-topic__header">
+          <div class="learn-topic__num">01</div>
+          <div class="learn-topic__title">The Standard Model of Particle Physics</div>
+        </div>
+        <p class="learn-topic__text">
+          The Standard Model is humanity's most precise description of the fundamental building blocks of
+          matter and the forces that govern them. Through the Particle Zoo, you encounter all 17 known
+          fundamental particles — 6 quarks, 6 leptons, 4 gauge bosons, and the Higgs boson — each with
+          their experimentally measured properties sourced from the Particle Data Group 2024 Review.
+          You learn why quarks are permanently confined inside hadrons, how leptons differ from quarks,
+          and what it means for a particle to be its own antiparticle.
+        </p>
+        <div class="learn-topic__tags">
+          <span>Quarks & leptons</span><span>Force carriers</span><span>Higgs mechanism</span><span>Antimatter</span>
+        </div>
+      </div>
+
+      <div class="learn-topic">
+        <div class="learn-topic__header">
+          <div class="learn-topic__num">02</div>
+          <div class="learn-topic__title">How Particle Accelerators Work</div>
+        </div>
+        <p class="learn-topic__text">
+          The Large Hadron Collider accelerates protons to 99.9999991% the speed of light inside a
+          27 km superconducting ring buried 100 metres underground. The Collider section teaches you
+          what "centre-of-mass energy" really means, why luminosity determines how rare a process you
+          can observe, and why different beam types — proton-proton vs. lead-lead — answer completely
+          different physics questions. You control the same parameters that LHC operators tune in
+          real run configurations.
+        </p>
+        <div class="learn-topic__tags">
+          <span>LHC operation</span><span>Beam energy √s</span><span>Luminosity</span><span>Bunch crossings</span>
+        </div>
+      </div>
+
+      <div class="learn-topic">
+        <div class="learn-topic__header">
+          <div class="learn-topic__num">03</div>
+          <div class="learn-topic__title">Quantum Field Theory & Cross-Sections</div>
+        </div>
+        <p class="learn-topic__text">
+          Every time you press COLLIDE, the physics engine samples from production cross-sections
+          calculated using Next-to-Leading Order (NLO) Quantum Chromodynamics. The Physics Prediction
+          panel shows you why QCD jet production dominates at low energies while the Higgs boson
+          requires teraelectronvolt-scale collisions — a direct consequence of E = mc² and the
+          mass hierarchy of fundamental particles. You develop an intuition for why "cross-section"
+          is the language physicists use to quantify probability in the quantum world.
+        </p>
+        <div class="learn-topic__tags">
+          <span>NLO QCD</span><span>E = mc²</span><span>Production rates</span><span>Phase space</span>
+        </div>
+      </div>
+
+      <div class="learn-topic">
+        <div class="learn-topic__header">
+          <div class="learn-topic__num">04</div>
+          <div class="learn-topic__title">Feynman Diagrams & Interaction Notation</div>
+        </div>
+        <p class="learn-topic__text">
+          Feynman diagrams are the universal shorthand of particle physics — each one is not merely
+          an illustration but a precise mathematical term in a perturbation expansion. The simulator
+          generates the correct diagram for each collision type: quark-gluon exchange for QCD jets,
+          the gluon-fusion top-quark loop for Higgs production, and the quark-antiquark annihilation
+          vertex for Z boson events. You learn to read time flowing left to right, to distinguish
+          fermion lines from boson propagators, and to understand why each diagram topology corresponds
+          to a different physical process.
+        </p>
+        <div class="learn-topic__tags">
+          <span>Feynman rules</span><span>Propagators</span><span>Vertices</span><span>Perturbation theory</span>
+        </div>
+      </div>
+
+      <div class="learn-topic">
+        <div class="learn-topic__header">
+          <div class="learn-topic__num">05</div>
+          <div class="learn-topic__title">Particle Detection & Event Reconstruction</div>
+        </div>
+        <p class="learn-topic__text">
+          The Real Events section shows authentic CMS detector data from proton-proton collisions
+          at 7 TeV in 2010. You learn to read a transverse event display: how charged tracks curve
+          in a 3.8 Tesla solenoidal magnetic field (and what the radius of curvature tells you about
+          momentum), how hadronic jets appear as energy cones in the calorimeters, why photons leave
+          no tracking signal, and how physicists infer the presence of invisible neutrinos from
+          missing transverse momentum. These are the same reconstruction techniques used in
+          publications from the CMS and ATLAS collaborations.
+        </p>
+        <div class="learn-topic__tags">
+          <span>Track reconstruction</span><span>Calorimetry</span><span>Missing ET</span><span>b-tagging</span>
+        </div>
+      </div>
+
+      <div class="learn-topic">
+        <div class="learn-topic__header">
+          <div class="learn-topic__num">06</div>
+          <div class="learn-topic__title">The Invariant Mass Method — How Particles Are Discovered</div>
+        </div>
+        <p class="learn-topic__text">
+          The Mass Spectrum section teaches you the single most important technique in experimental
+          particle physics: the invariant mass resonance. By accumulating many collision events and
+          plotting the calculated mass of particle pairs, a peak appears above the smooth background
+          at the mass of the parent particle. This is how the Z boson was discovered at CERN in 1983,
+          how the Higgs boson was found in 2012, and how physicists continue to search for new
+          particles today. The formula M² = (E₁+E₂)² − |p⃗₁+p⃗₂|² gives a Lorentz-invariant quantity
+          that is the same in any reference frame — a profound consequence of special relativity.
+        </p>
+        <div class="learn-topic__tags">
+          <span>Invariant mass</span><span>Resonance peaks</span><span>Z boson (91.2 GeV)</span><span>Signal vs background</span>
+        </div>
+      </div>
+
+      <div class="learn-topic">
+        <div class="learn-topic__header">
+          <div class="learn-topic__num">07</div>
+          <div class="learn-topic__title">Open Science & Reproducibility</div>
+        </div>
+        <p class="learn-topic__text">
+          Every number in this application can be traced to a peer-reviewed source. Particle
+          properties come from the PDG 2024 Review, collision events from the CERN Open Data Portal
+          (CC0 license), and cross-sections from published NLO calculations. This reflects a core
+          principle of modern science: results must be reproducible from publicly available data.
+          CERN has released over 2 petabytes of collision data freely to the world, enabling
+          anyone — student, educator, or independent researcher — to perform the same analyses
+          that won Nobel Prizes.
+        </p>
+        <div class="learn-topic__tags">
+          <span>CERN Open Data</span><span>PDG 2024</span><span>Reproducibility</span><span>CC0 License</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="about-citation">
+      <p class="about-citation__title">Primary Data Citation</p>
+      <p class="about-citation__text">
+        CMS Collaboration (2014). <em>CMS primary datasets in AOD format from RunB of 2010
+        (/Mu/Run2010B-Apr21ReReco-v1/AOD).</em> CERN Open Data Portal.
+        <a href="https://doi.org/10.7483/OPENDATA.CMS.A342.9982" target="_blank" rel="noopener">
+          DOI:10.7483/OPENDATA.CMS.A342.9982
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ────────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="footer__left">
+      <span class="nav__logo-symbol">⬡</span>
+      <span>Particle<em>Playground</em></span>
+    </div>
+    <div class="footer__center">
+      <span>Built with real CERN Open Data · CC0 Public Domain · PDG 2024</span>
+    </div>
+    <div class="footer__right">
+      <a href="https://opendata.cern.ch" target="_blank" rel="noopener">CERN Open Data</a>
+      <a href="https://pdg.lbl.gov" target="_blank" rel="noopener">PDG 2024</a>
+      <a href="https://doi.org/10.7483/OPENDATA.CMS.A342.9982" target="_blank" rel="noopener">DOI</a>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="src/data/particles.js"></script>
+  <script src="src/data/events.js"></script>
+  <script src="src/physics/crossSections.js"></script>
+  <script src="src/physics/collisionEngine.js"></script>
+  <script src="src/components/heroCanvas.js"></script>
+  <script src="src/components/collider.js"></script>
+  <script src="src/components/zoo.js"></script>
+  <script src="src/components/eventDisplay.js"></script>
+  <script src="src/utils/nav.js"></script>
+  <script src="src/utils/animations.js"></script>
+  <script src="src/components/learn.js"></script>
+  <script src="src/components/tour.js"></script>
+  <script src="src/components/sound.js"></script>
+  <script src="src/components/feynman.js"></script>
+  <script src="src/components/histogram.js"></script>
+  <script src="src/main.js"></script>
+</body>
+</html>

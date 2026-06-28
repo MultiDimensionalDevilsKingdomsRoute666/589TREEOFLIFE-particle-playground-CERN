@@ -1,0 +1,376 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   LEARN SYSTEM — Tooltips, Info Buttons, Deep-Dive Panels
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── ① Info Button (ⓘ) — inline quick tooltip ────────────────────── */
+.info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1px solid rgba(0,229,255,0.4);
+  background: rgba(0,229,255,0.08);
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  vertical-align: middle;
+  margin-left: 5px;
+  transition: all var(--dur-fast);
+  position: relative;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.info-btn:hover {
+  background: rgba(0,229,255,0.2);
+  border-color: var(--accent-cyan);
+  transform: scale(1.18);
+  box-shadow: 0 0 8px rgba(0,229,255,0.3);
+}
+
+/* Global floating tooltip — rendered by JS, always on top */
+#globalTooltip {
+  position: fixed;
+  z-index: 99999;
+  background: #0b1220;
+  border: 1px solid rgba(0,229,255,0.3);
+  color: #8a9ab5;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  line-height: 1.65;
+  padding: 0.65rem 0.9rem;
+  border-radius: 7px;
+  max-width: 250px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.65), 0 0 0 1px rgba(0,229,255,0.06);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+#globalTooltip.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+
+
+
+
+.info-btn.tip-down::before {
+  bottom: auto;
+  top: calc(100% + 4px);
+  border-top-color: transparent;
+  border-bottom-color: rgba(0,229,255,0.25);
+}
+
+/* ── ② Deep-Dive Button — opens large panel ──────────────────────── */
+.learn-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  border: 1px solid rgba(0,229,255,0.2);
+  background: rgba(0,229,255,0.05);
+  padding: 0.3rem 0.65rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all var(--dur-fast);
+  white-space: nowrap;
+}
+.learn-btn:hover {
+  background: rgba(0,229,255,0.12);
+  border-color: rgba(0,229,255,0.5);
+}
+.learn-btn__icon {
+  font-size: 0.8rem;
+  transition: transform var(--dur-fast);
+}
+.learn-btn:hover .learn-btn__icon { transform: scale(1.2); }
+
+/* ── ③ Deep-Dive Panel (overlay) ─────────────────────────────────── */
+.learn-panel-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-med);
+}
+.learn-panel-overlay.open {
+  pointer-events: all;
+  opacity: 1;
+}
+.learn-panel-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(4,5,10,0.88);
+  backdrop-filter: blur(12px);
+}
+
+.learn-panel {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-card);
+  border: 1px solid var(--border-bright);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 700px;
+  max-height: 88vh;
+  overflow-y: auto;
+  transform: scale(0.96) translateY(16px);
+  transition: transform 0.35s var(--ease-out-expo);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+}
+.learn-panel-overlay.open .learn-panel {
+  transform: none;
+}
+
+.learn-panel__header {
+  position: sticky;
+  top: 0;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  z-index: 1;
+}
+.learn-panel__icon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+.learn-panel__titles { flex: 1; }
+.learn-panel__tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  margin-bottom: 0.2rem;
+}
+.learn-panel__title {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.learn-panel__close {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--surface-02);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all var(--dur-fast);
+  flex-shrink: 0;
+}
+.learn-panel__close:hover {
+  background: var(--surface-03);
+  color: var(--text-primary);
+}
+
+.learn-panel__body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Text blocks */
+.learn-block { display: flex; flex-direction: column; gap: 0.6rem; }
+.learn-block__label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+.learn-block__text {
+  font-size: 0.925rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+.learn-block__text strong { color: var(--text-primary); font-weight: 600; }
+.learn-block__text em { color: var(--accent-cyan); font-style: normal; }
+
+/* Analogy box */
+.learn-analogy {
+  background: rgba(0,229,255,0.05);
+  border: 1px solid rgba(0,229,255,0.15);
+  border-left: 3px solid var(--accent-cyan);
+  border-radius: 4px;
+  padding: 1rem 1.25rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+.learn-analogy__icon { font-size: 1.3rem; flex-shrink: 0; margin-top: 0.1rem; }
+.learn-analogy__text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.learn-analogy__text strong { color: var(--accent-cyan); }
+
+/* Key fact chips */
+.learn-facts {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+.learn-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  background: var(--surface-02);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.6rem 0.9rem;
+  flex: 1;
+  min-width: 120px;
+}
+.learn-fact__val {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+.learn-fact__label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Animated diagram canvas inside panel */
+.learn-diagram {
+  width: 100%;
+  height: 180px;
+  background: var(--bg-void);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+.learn-diagram canvas {
+  width: 100%;
+  height: 100%;
+}
+.learn-diagram__label {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: rgba(4,5,10,0.8);
+  padding: 0.2rem 0.6rem;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* Process steps */
+.learn-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.learn-step {
+  display: flex;
+  gap: 1rem;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+  align-items: flex-start;
+}
+.learn-step:last-child { border-bottom: none; }
+.learn-step__num {
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: rgba(0,229,255,0.1);
+  border: 1px solid rgba(0,229,255,0.3);
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 0.1rem;
+}
+.learn-step__content { flex: 1; }
+.learn-step__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+.learn-step__desc {
+  font-size: 0.845rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* ── ④ Beginner Banner (top of collider) ─────────────────────────── */
+.beginner-banner {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(0,229,255,0.05);
+  border: 1px solid rgba(0,229,255,0.15);
+  border-radius: 6px;
+  padding: 0.85rem 1.25rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+.beginner-banner__text {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  min-width: 200px;
+}
+.beginner-banner__text strong { color: var(--text-primary); }
+.beginner-banner__actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* ── ⑤ Concept Tag (inline highlighted term) ─────────────────────── */
+.concept {
+  color: var(--accent-cyan);
+  border-bottom: 1px dashed rgba(0,229,255,0.4);
+  cursor: help;
+  transition: border-color var(--dur-fast);
+}
+.concept:hover { border-color: var(--accent-cyan); }
+
+/* ── Scrollbar inside panel ──────────────────────────────────────── */
+.learn-panel::-webkit-scrollbar { width: 4px; }
+.learn-panel::-webkit-scrollbar-track { background: transparent; }
+.learn-panel::-webkit-scrollbar-thumb { background: var(--surface-03); border-radius: 2px; }
+
+@media (max-width: 600px) {
+  .learn-panel { max-height: 95vh; border-radius: 6px 6px 0 0; }
+  .learn-panel-overlay { align-items: flex-end; padding: 0; }
+  .learn-facts { flex-direction: column; }
+}

@@ -1,0 +1,113 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   FEYNMAN DIAGRAM PANEL — Styles
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.feynman-panel {
+  margin-top: 1.5px;
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.feynman-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+}
+
+.feynman-panel__titles {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.feynman-panel__tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-cyan);
+  background: rgba(0,229,255,0.07);
+  border: 1px solid rgba(0,229,255,0.18);
+  padding: 0.2rem 0.55rem;
+  border-radius: 2px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.feynman-panel__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+.feynman-panel__subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.feynman-panel__canvas-wrap {
+  position: relative;
+  background: var(--bg-void);
+  height: 220px;
+}
+
+.feynman-panel__canvas-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.feynman-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  pointer-events: none;
+}
+
+.feynman-empty__line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  max-width: 120px;
+}
+
+.feynman-empty__text {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.feynman-panel__desc {
+  padding: 0.85rem 1.25rem;
+  font-size: 0.845rem;
+  color: var(--text-secondary);
+  line-height: 1.72;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  min-height: 2.5rem;
+}
+
+.feynman-panel__desc:empty::before {
+  content: 'Collision diagram will appear here after you press COLLIDE.';
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.05em;
+}

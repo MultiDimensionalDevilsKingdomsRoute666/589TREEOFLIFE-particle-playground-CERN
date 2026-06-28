@@ -1,0 +1,299 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   INVARIANT MASS HISTOGRAM — Styles
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.histogram-section {
+  padding: var(--section-py) var(--section-px);
+  background: var(--bg-void);
+  border-top: 1px solid var(--border);
+}
+
+.histogram-section .section__header {
+  max-width: 700px;
+  margin-bottom: 3rem;
+}
+
+.histogram-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  min-height: 480px;
+}
+
+/* ── Main chart area ─────────────────────────────────────────────── */
+.histogram-chart {
+  background: var(--bg-deep);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.histogram-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.histogram-toolbar__title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  flex: 1;
+}
+
+.histogram-mode-btns {
+  display: flex;
+  gap: 1px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.histogram-mode-btn {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+  padding: 0.35rem 0.7rem;
+  color: var(--text-muted);
+  background: var(--bg-deep);
+  border: none;
+  cursor: pointer;
+  transition: all var(--dur-fast);
+}
+.histogram-mode-btn.active {
+  color: var(--bg-void);
+  background: var(--accent-cyan);
+}
+.histogram-mode-btn:hover:not(.active) {
+  background: var(--surface-02);
+  color: var(--text-primary);
+}
+
+.histogram-clear-btn {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  background: none;
+  border-radius: 3px;
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+  transition: all var(--dur-fast);
+}
+.histogram-clear-btn:hover {
+  color: var(--accent-magenta);
+  border-color: var(--accent-magenta);
+}
+
+.histogram-canvas-wrap {
+  flex: 1;
+  position: relative;
+  min-height: 360px;
+  height: 360px;
+}
+.histogram-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+}
+
+/* Empty state */
+.histogram-empty {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  pointer-events: none;
+}
+.histogram-empty__icon { font-size: 2.5rem; opacity: 0.4; }
+.histogram-empty__text {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.7;
+}
+.histogram-empty__hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+  font-family: var(--font-mono);
+}
+
+/* Peak badge */
+.histogram-peak-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: rgba(255,0,128,0.12);
+  border: 1px solid rgba(255,0,128,0.35);
+  border-radius: 4px;
+  padding: 0.4rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--dur-med);
+}
+.histogram-peak-badge.visible { opacity: 1; }
+.histogram-peak-badge__label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-magenta);
+}
+.histogram-peak-badge__val {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.histogram-peak-badge__sub {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+/* ── Side panel ──────────────────────────────────────────────────── */
+.histogram-panel {
+  background: var(--bg-card);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.histogram-panel__section {
+  padding: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+.histogram-panel__section:last-child { border-bottom: none; }
+
+.histogram-panel__label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+}
+
+/* Stats grid */
+.histogram-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.histogram-stat {
+  background: var(--surface-01);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.6rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.histogram-stat__val {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent-cyan);
+}
+.histogram-stat__key {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Channel filter */
+.histogram-channels {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.histogram-channel {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background var(--dur-fast);
+  border: 1px solid transparent;
+}
+.histogram-channel:hover { background: var(--surface-02); }
+.histogram-channel.active {
+  background: var(--surface-02);
+  border-color: var(--border);
+}
+.histogram-channel__dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.histogram-channel__name {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  flex: 1;
+}
+.histogram-channel__count {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* Discovery card */
+.discovery-card {
+  background: linear-gradient(135deg, rgba(255,0,128,0.08), rgba(0,229,255,0.05));
+  border: 1px solid rgba(255,0,128,0.2);
+  border-radius: 6px;
+  padding: 1rem;
+  display: none;
+}
+.discovery-card.visible { display: block; }
+.discovery-card__icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.discovery-card__title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  color: var(--text-primary);
+}
+.discovery-card__text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+.discovery-card__text em { color: var(--accent-cyan); font-style: normal; }
+
+/* Explanation box */
+.histogram-explain {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+.histogram-explain strong { color: var(--text-primary); }
+
+/* ── Responsive ──────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .histogram-layout {
+    grid-template-columns: 1fr;
+  }
+  .histogram-panel { max-height: 300px; }
+}
