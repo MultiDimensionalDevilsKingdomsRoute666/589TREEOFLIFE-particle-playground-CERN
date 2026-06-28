@@ -5,7 +5,7 @@
 [![License: CC0](https://img.shields.io/badge/Data-CC0%20Public%20Domain-green)](https://creativecommons.org/publicdomain/zero/1.0/)
 [![Data: CERN Open Data](https://img.shields.io/badge/Data-CERN%20Open%20Data-blue)](https://opendata.cern.ch)
 [![PDG 2024](https://img.shields.io/badge/Properties-PDG%202024-orange)](https://pdg.lbl.gov)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](#)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen)](https://mahmutpoyraz.github.io/particle-playground)
 
 ---
 
