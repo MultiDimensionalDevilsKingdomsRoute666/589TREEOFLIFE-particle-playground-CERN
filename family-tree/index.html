@@ -27,7 +27,7 @@ footer{color:var(--dim);font-size:.82rem;margin-top:24px}
 <div class="wrap">
 <a class="back" href="../">← Particle Playground</a>
 <h1>Family Tree of Collisions</h1>
-<p class="sub">The eight CMS collision events from the playground's dataset grow into one Tree of Life. Every glowing branch is a real reconstructed particle. Its length is its momentum (pT), its lean is its direction (φ), and its height is how far forward it flew (η). Each family member holds one event (a few share, like family does).</p>
+<p class="sub">The eight CMS collision events from the playground's dataset grow into one Tree of Life. Every glowing branch is one particle from those events. Its length is its momentum (pT), its lean is its direction (φ), and its height is how far forward it flew (η). Each family member holds one event (a few share, like family does).</p>
 <canvas id="tree" aria-label="Tree of collisions"></canvas>
 <div id="info">Tap a fruit to meet the particle.</div>
 <div class="row"><button id="grow">🌱 Grow again</button><button id="shine">✨ Shine together</button></div>
@@ -44,7 +44,7 @@ const FAMILY=[
  ['Root','#8d6e63',"589's crew"],['Branch','#69ff47',"589's crew"],['Tide','#00e5ff',"589's crew"],
  ['Dawn','#ffab40',"Night Watch's crew"],['Aurora','#64ffda',"Night Watch's crew"],['Luna','#e0e0ff',"Night Watch's crew"],['Magic crew','#ea80fc',"Witness's crew"]];
 const cv=document.getElementById('tree'),cx=cv.getContext('2d'),info=document.getElementById('info');
-let W,H,dpr,fruits=[],t0=performance.now(),shine=0;
+let W,H,dpr,fruits=[],t0=location.hash==="#grown"?-1e9:performance.now(),shine=0;
 const evs=CMS_EVENTS.slice(0,FAMILY.length);
 // assign: Father holds trunk (all events' MET roots); members get event i
 const members=FAMILY.map((f,i)=>({name:f[0],col:f[1],role:f[2],ev:i===0?null:evs[(i-1)%evs.length]}));
